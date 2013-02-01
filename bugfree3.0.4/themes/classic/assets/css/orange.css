@@ -1,0 +1,61 @@
+#edit-top-bar
+{
+    background-color: rgb(255,102,0);
+}
+
+#logincontainer
+{
+    border-color: rgb(254,236,224);
+    background-color:rgb(255,247,241);
+}
+
+#loginlogo {
+    background: url("../images/orange/seperate_line.png") no-repeat scroll right center transparent;
+}
+
+#version {
+    background: url("../images/orange/logo_login.png") no-repeat scroll left bottom transparent;
+    color: rgb(252,127,44);
+}
+
+#loginform-container .TxtInput {
+    border-color: #BCBCBC;
+    color: #41697E;
+}
+
+.loginbutton
+{
+    background-color:rgb(250,134,54);
+}
+
+#top {
+    background-color: rgb(255,102,0);
+}
+
+.menu li a
+{
+    color: white;
+    background-color: rgb(255,179,126);
+}
+
+#leftindex
+{
+    background-color: rgb(255,223,191);
+}
+
+.leftmenu .title
+{
+    background-color: rgb(254,176,123);
+    color:#fff;
+}
+
+.leftmenu a
+{
+    color:#000000;
+}
+
+div.querydiv
+{
+    border-color: #FEB07B;
+    background-color: rgb(255,233,210);
+}

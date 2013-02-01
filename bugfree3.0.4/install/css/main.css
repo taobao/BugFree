@@ -1,0 +1,187 @@
+body
+{
+    background: white;
+    font-family:'Lucida Grande',Verdana,Geneva,Lucida,Helvetica,Arial,sans-serif;
+    font-size:10pt;
+    margin: 0;
+    padding: 0;
+    font-weight:normal;
+}
+
+#page
+{
+    height: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#header
+{
+    background: #229DCD;
+    border: none;
+}
+
+#header img
+{
+    margin-left: 25px;
+    border: none;
+}
+
+#header ul
+{
+    list-style-type: none;
+    position: absolute;
+    left: 240px;
+    top: 14px;
+    *top: 17px;
+    margin: 0;
+    padding: 0;
+}
+
+#header ul li
+{
+    float: left;
+    margin-right: 5px;
+    width: 90px;
+    text-align: center;
+    line-height: 27px;
+    height: 27px;
+    background: #74D0F1;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+#header ul li.active
+{
+    background: #FFFFFF;
+    color: #000000;
+}
+
+.supported {
+    color: #009900;
+}
+
+.not-supported {
+    color: #FF0000;
+}
+
+h1
+{
+    color:black;
+    font-size:1.6em;
+    font-weight:bold;
+    margin:0.5em 0pt;
+}
+
+h2
+{
+    color:black;
+    font-size:1.25em;
+    font-weight:bold;
+    margin:0.3em 0pt;
+}
+
+h3
+{
+    color:black;
+    font-size:1.1em;
+    font-weight:bold;
+    margin:0.2em 0pt;
+}
+
+#content
+{
+    padding: 0px 10px;
+}
+
+div.loading
+{
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    padding: 3px 0px;
+    background: #FFF1A8;
+    display: none;
+}
+
+table.result
+{
+    border-collapse:collapse;
+    width:100%;
+    margin-top: 10px;
+}
+
+table.result th
+{
+    background: #50BAE3;
+    text-align:left;
+}
+
+table.result th, table.result td
+{
+    border: 1px solid #50BAE3;
+    padding: 0px 3px;
+    height: 27px;
+}
+
+td.label
+{
+    width: 150px;
+    text-align: right;
+}
+
+td.passed
+{
+    background-color: #60BF60;
+    border: 1px solid silver;
+    padding: 2px;
+}
+
+td.warning
+{
+    background-color: #FFFFBF;
+    border: 1px solid silver;
+    padding: 2px;
+}
+
+td.failed
+{
+    background-color: #FF8080;
+    border: 1px solid silver;
+    padding: 2px;
+}
+
+p.buttons
+{
+    text-align: center;
+}
+
+p.buttons input
+{
+    height: 28px;
+    width: 80px;
+}
+
+input.text
+{
+    border: 1px solid #CCCCCC;
+    border-top-color: #666666;
+    padding: 3px 0 3px 3px;
+    width: 200px;
+    margin-right: 1px;
+    outline: none;
+}
+
+input.focus
+{
+    border: 2px solid #50BAE3;
+    padding: 2px 0 2px 2px;
+    margin-right: 0;
+}
+
+label.error
+{
+    margin-left: 8px;
+    color: #FF0000;
+}

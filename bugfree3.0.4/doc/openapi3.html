@@ -1,0 +1,2827 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="../favicon_blue.ico" type="image/x-icon" />
+        <link rel="stylesheet" type="text/css" href="main.css" />
+        <script src="jquery.js"></script>
+        <title>BugFree Open API 3.0</title>
+        <style>
+            html, body {
+                background: #FFFFFF;
+            }
+
+            h2 {
+                font-size: 1.4em;
+                padding: 5px;
+                background: #E0E0E0;
+            }
+
+            h2 a {
+                color: #000000;
+                text-decoration: none;
+            }
+
+            .subtilte {
+                float: right;
+                color: #FFFFFF;
+                font-size: 15px;
+                font-weight: bold;
+                margin: 0px 10px;
+                line-height: 41px;
+            }
+
+            #top {
+                position: fixed;
+                width: 100%;
+                height: 41px;
+                top: 0px;
+                left: 0px;
+                z-index: 10000;
+            }
+
+            #top ul
+            {
+                list-style-type: none;
+                position: absolute;
+                left: 240px;
+                top: 14px;
+                *top: 17px;
+                margin: 0;
+                padding: 0;
+            }
+
+            #top ul li
+            {
+                float: left;
+                margin-right: 5px;
+                width: 80px;
+                text-align: center;
+                line-height: 27px;
+                height: 27px;
+                background: #74D0F1;
+                color: #FFFFFF;
+                font-weight: bold;
+            }
+
+            #top ul li.active
+            {
+                background: #FFFFFF;
+                color: #000000;
+            }
+
+            #top a {
+                color: #FFFFFF;
+                text-decoration: none;
+            }
+
+            #nav {
+                position: fixed;
+                left: 0px;
+                top: 41px;
+                height: 99%;
+                overflow: auto;
+                border-right: 1px dotted black;
+                background: #F0F0F0;
+            }
+
+            #nav ul {
+                width: 185px;
+                padding: 10px 10px 10px 20px;
+                margin: 0;
+            }
+
+            #nav li {
+                list-style: none;
+                padding: 0;
+                margin: 3px 0px;
+            }
+
+            #nav li a {
+                font-size: 14px;
+            }
+
+            #nav li a.selected {
+                color: #333333;
+            }
+
+            #nav li a.selected:hover {
+                text-decoration: none;
+                cursor: text;
+            }
+
+            #nav li input {
+                margin-right: 5px;
+            }
+
+            #content {
+                position: absolute;
+                top: 51px;
+                width: 100%;
+            }
+
+            #main {
+                margin: 0px 0px 0px 220px;
+                padding: 0px 10px;
+            }
+
+            p.para {
+                padding: 0px 0px 10px 0px;
+            }
+
+            table {
+                border-collapse:collapse;
+                border-spacing:0;
+                margin:3px 0 26px 0px;
+                width:100%;
+                text-align: left;
+            }
+
+            table th {
+                border: 1px solid #CCCCCC;
+                background: #DEE8F1;
+                text-align: left;
+                font-weight:bold;
+                padding:3px 5px;
+            }
+
+            table td {
+                border: 1px solid #CCCCCC;
+                padding:3px 5px;
+            }
+
+            div.code {
+                background: #CFCFCF;
+                padding: 5px;
+                margin: 0;
+                word-wrap:break-word;
+            }
+            span {
+                color: GREEN;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="top">
+            <div id="logo">
+                <img src="logo.png" alt="BugFree" />
+            </div>
+            <ul id="menu">
+                <li><a href="openapi.html">API 2.X</a></li>
+                <li class="active">API 3.0</li>
+            </ul>
+        </div><!-- header-->
+        <div id="content">
+            <div id="nav">
+                <ul>
+                    <li><a href="#getsid">getsid</a></li>
+                    <li><a href="#login">login</a></li>
+                    <li><a href="#getbug">getbug</a></li>
+                    <li><a href="#getcase">getcase</a></li>
+                    <li><a href="#getresult">getresult</a></li>
+                    <li><a href="#addbug">addbug</a></li>
+                    <li><a href="#addcase">addcase</a></li>
+                    <li><a href="#addresult">addresult</a></li>
+                    <li><a href="#updatebug">updatebug</a></li>
+                    <li><a href="#updatecase">updatecase</a></li>
+                    <li><a href="#updateresult">updateresult</a></li>
+                    <li><a href="#getquery">getquery</a></li>
+                    <li><a href="#query">query</a></li>
+                    <li><a href="#findproducts">findproducts</a></li>
+                    <li><a href="#findmodules">findmodules</a></li>
+                    <li><a href="#finduser">finduser</a></li>
+                    <li><a href="#getBugStatusChangeCount">getBugStatusChangeCount</a></li>
+                    <li><a href="#getReopenCount">getReopenCount</a></li>
+                    <li><a href="#getReopenBugDetail">getReopenBugDetail</a></li>
+                    <li><a href="#getCloseBugDetail">getCloseBugDetail</a></li>
+                    <li><a href="#getBugStatusDetail">getBugStatusDetail</a></li>
+                    <li><a href="#getBugCountByReopenNum">getBugCountByReopenNum</a></li>
+                </ul>
+            </div>
+            <div id="main">
+                <div>
+                    <h2><a select="getsid">getsid</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">向BugFree系统获取一个session会话，为后面的方法提供保持会话的session。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getsid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>返回结果</h3>
+                        <table>
+                            <tr>
+                                <th width="20%">名称</th>
+                                <th width="20%">类型</th>
+                                <th width="20%">示例值</th>
+                                <th width="45%">描述</th>
+                            </tr>
+                            <tr>
+                                <td>sessionname</td>
+                                <td>String</td>
+                                <td>PHPSESSID</td>
+                                <td>Session名称</td>
+                            </tr>
+                            <tr>
+                                <td>sessionid</td>
+                                <td>String</td>
+                                <td>72iltnrjsjph6nm8rmsru4nbd2</td>
+                                <td>Session ID</td>
+                            </tr>
+                            <tr>
+                                <td>rand</td>
+                                <td>String</td>
+                                <td>dd02a</td>
+                                <td>随机码，用于生成用户验证码</td>
+                            </tr>
+                            <tr>
+                                <td>status</td>
+                                <td>String</td>
+                                <td>success</td>
+                                <td>API执行结果状态</td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code"><span class="comment">#支持POST</span><br/>http://bugfree/api3.php?mode=getsid</div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","sessionname":"PHPSESSID","sessionid":"e165e0c89b748a6ec2f0598ab52658fd","rand":"12d01"}</div>
+                    </div>
+                </div>
+                <!-- end getsid div -->
+                <hr/>
+                <!-- login div -->
+                <div>
+                    <h2><a select="login">login</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">使用用户名和加密后的密码登陆BugFree系统。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>login</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>username</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>用户登录名</td>
+                                <td>administrator</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>auth</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>认证码。<div class="code"><span class="comment">#加密算法：</span><br/>$auth = md5(md5($username.md5($password)).API_KEY.$rand)</div>其中$username为用户名，$password为该用户的明文密码，$rand为getsid方法获得的rand值。
+                                </td>
+                                <td>0de98aa1004345b30489b3195701fb71</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>返回结果</h3>
+                        <table>
+                            <tr>
+                                <th width="20%">名称</th>
+                                <th width="20%">类型</th>
+                                <th width="20%">示例值</th>
+                                <th width="45%">描述</th>
+                            </tr>
+                            <tr>
+                                <td>timeout</td>
+                                <td>String</td>
+                                <td>1286790253</td>
+                                <td>Session过期时间</td>
+                            </tr>
+                            <tr>
+                                <td>status</td>
+                                <td>String</td>
+                                <td>success</td>
+                                <td>API执行结果状态</td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post<br/>
+                                #via getsid<br/>
+                                #  sesseionname = PHPSESSID<br/>
+                                #  sessionid = 72iltnrjsjph6nm8rmsru4nbd2<br/>
+                                #  rand = dd02a<br/>
+                                #auth = md5(md5($username.md5($password)).API_KEY.$rand)
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=login&&amp;PHPSESSID=72iltnrjsjph6nm8rmsru4nbd2&amp;username=admin&amp;auth=315ba56f2dba87b280e6835074fb2925
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","timeout":1321431030}</div>
+                    </div>
+                </div>
+                <!-- end login div -->
+                <hr/>
+                <!-- getbug div -->
+                <div>
+                    <h2><a select="getbug">getbug</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">获得Bug信息。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getbug</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>Bug的主键</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=getbug&amp;PHPSESSID=72iltnrjsjph6nm8rmsru4nbd2&amp;id=129592
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","id":"129592","created_at":"2011-11-17 05:35:15","created_by":"5997","updated_at":"2011-11-18 11:20:14","updated_by":"5997","bug_status":"Active","severity":"4","priority":"4","assign_to":"-1","title":"\u6b22\u8fce\u4f7f\u7528BugFree","mail_to":"","repeat_step":"[\u6b65\u9aa4]
+                            \r\n1.\u6b22\u8fce\u4f7f\u7528BugFree
+                            \r\n2.
+                            \r\n
+                            \r\n[\u7ed3\u679c]
+                            \r\n
+                            \r\n[\u671f\u671b]
+                            \r\n
+                            \r\n[\u5907\u6ce8]
+                            \r\n
+                            ","lock_version":"2","resolved_at":null,"resolved_by":null,"closed_at":null,"closed_by":null,"related_bug":"","related_case":"","related_result":"","productmodule_id":"9795","modified_by":"5997","solution":null,"duplicate_id":null,"product_id":"24","reopen_count":"0","product_name":"Sample","module_name":"Sample\/Sample Module","created_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","updated_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","resolved_by_name":null,"closed_by_name":null,"assign_to_name":"Active","bug_id":"129592","test":"yes","mulitselect":"1,2,3,4","OpenedBuild":"N\/A","BugSubStatus":null,"BugMachine":null,"BugKeyword":null,"ResolvedBuild":null,"BugType":"\u5176\u4ed6","HowFound":"\u5176\u4ed6","BugOS":null,"BugBrowser":null,"action_list":[],"attachment_file":[{"id":"52173","file_title":"favicon.ico","file_location":"Project24\/201111\/112015110.ico","file_type":"ico","file_size":"1.12305KB"}]}</div>
+                    </div>
+                </div>
+                <!-- end getbug div -->
+                <hr/>
+                <!-- getcase div -->
+                <div>
+                    <h2><a select="getcase">getcase</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">获得Case信息。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getcase</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>Case的主键</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=getcase&amp;PHPSESSID=72iltnrjsjph6nm8rmsru4nbd2&amp;id=82756
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">
+                            {"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","id":"82756","created_at":"2011-11-17 05:45:04","created_by":"5997","updated_at":"2011-11-18 11:24:57","updated_by":"5997","case_status":"Active","priority":"4","assign_to":"-1","title":"\u6b22\u8fce\u4f7f\u7528BugFree","mail_to":"","case_step":"[\u6b65\u9aa4]
+                            \r\n1.
+                            \r\n2.
+                            \r\n
+                            \r\n[\u9a8c\u8bc1]
+                            \r\n
+                            \r\n[\u5907\u6ce8]
+                            \r\n
+                            ","lock_version":"3","related_bug":"","related_case":"","related_result":"36676","productmodule_id":"9795","modified_by":"5997","delete_flag":"0","product_id":"24","product_name":"Sample","module_name":"Sample\/Sample Module","created_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","updated_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","assign_to_name":"Active","case_id":"82756","testtest":"1,2,3","MarkForDeletion":"\u5426","CaseKeyword":null,"DisplayOrder":"0","ScriptStatus":null,"ScriptedBy":null,"ScriptedDate":null,"ScriptLocation":null,"CaseType":"\u5176\u4ed6","CaseMethod":"\u624b\u52a8\u6267\u884c","CasePlan":null,"action_list":[],"attachment_file":[{"id":"52174","file_title":"logo.png","file_location":"Project24\/201111\/112457160.png","file_type":"png","file_size":"6.41992KB"}]}</div>
+                    </div>
+                </div>
+                <!-- end getcase div -->
+                <hr/>
+                <!-- getresult div -->
+                <div>
+                    <h2><a select="getresult">getresult</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">获得Result信息。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getresult</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>Result的主键</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=getresult&amp;PHPSESSID=72iltnrjsjph6nm8rmsru4nbd2&amp;id=1
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","id":"36676","created_at":"2011-11-17 06:22:56","created_by":"5997","updated_at":"2011-11-17 06:22:56","updated_by":"5997","result_status":"Completed","assign_to":"-2","result_value":"Passed","mail_to":"","result_step":"[\u6b65\u9aa4]
+                            \r\n1.
+                            \r\n2.
+                            \r\n
+                            \r\n[\u9a8c\u8bc1]
+                            \r\n
+                            \r\n[\u5907\u6ce8]
+                            \r\n
+                            ","lock_version":"1","related_bug":null,"productmodule_id":"9795","modified_by":"5997","title":"\u6b22\u8fce\u4f7f\u7528BugFree","related_case_id":"82756","product_id":"24","product_name":"Sample","module_name":"Sample\/Sample Module","created_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","updated_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","assign_to_name":"Closed","result_id":"36676","OpenedBuild":"N\/A","BugOS":null,"BugBrowser":null,"BugMachine":null,"ResultKeyword":null,"action_list":[],"attachment_file":[]}</div>
+                    </div>
+                </div>
+                <!-- end getresult div -->
+                <hr/>
+                <!-- addbug div -->
+                <div>
+                    <h2><a select="addbug">addbug</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">新增Bug。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>addbug</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>product_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>产品id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>productmodule_id</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>模块id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>no_bbcode_transfer</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>是否不需要BBCode转换,默认要转换</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>title</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>Bug标题</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>                            
+                            <tr>
+                                <td>severity</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>严重程度</td>
+                                <td>1,2,3,4</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>priority</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>优先级</td>
+                                <td>1,2,3,4</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>repeat_step</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>重现步骤</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>assign_to_name</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>指派给</td>
+                                <td>系统管理员</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>action_note</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>注释</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>mail_to</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>抄送给, 以','分割</td>
+                                <td>系统管理员,admin@bugfree.org</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>related_case</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>相关Case</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>attachment_file[]</td>
+                                <td>Beta</td>
+                                <td></td>
+                                <td>附件，必须通过POST方法传递</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>从BugFree 2.x升级到BugFree 3.0的自定义字段参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>BugType</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>Bug类型</td>
+                                <td>代码错误,用户界面,需求变动,新增需求,需求文档,设计文档,配置相关,安装部署,安全相关,性能压力,标准规范,测试脚本,事务跟踪,Bad Case,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>HowFound</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>如何发现</td>
+                                <td>代码错误,用户界面,需求变动,新增需求,需求文档,设计文档,配置相关,安装部署,安全相关,性能压力,标准规范,测试脚本,事务跟踪,Bad Case,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>OpenedBuild</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>创建build</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugOS</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>操作系统</td>
+                                <td>全部,Windows 7,Windows Vista,Windows XP,Windows 2000,Linux,FreeBSD,Unix,Mac OS,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugBrowser</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>浏览器</td>
+                                <td>全部,IE 8.0,IE 7.0,IE 6.0,FireFox 4.0,FireFox 3.0,FireFox 2.0,Chrome,Safari,Opera,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugMachine</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>机器配置</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugKeyword</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>关键字</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=addbug&amp;product_id=154&amp;productmodule_id=830&amp;title=test&amp;severity=1&amp;assign_to_name=系统管理员&amp;BugType=%B4%FA%C2%EB%B4%ED%CE%F3&amp;HowFound=%B9%A6%C4%DC%B2%E2%CA%D4&amp;OpenedBuild=test&amp;BugKeyword=test&amp;priority=1&amp;mail_to=系统管理员&amp;PHPSESSID=b87e1bb2806efda076fa8f3fc4a9f43d
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","BugID":"129591"}</div>
+                    </div>
+                </div>
+                <!-- end addbug div -->
+                <hr/>
+                <!-- addcase div -->
+                <div>
+                    <h2><a select="addcase">addcase</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">新增Case。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>addcase</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>product_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>产品id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>productmodule_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>模块id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>no_bbcode_transfer</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>是否不需要BBCode转换,默认要转换</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>title</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>Case标题</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>case_step</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>Case步骤</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>assign_to_name</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>指派给</td>
+                                <td>系统管理员</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>case_status</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>Case状态</td>
+                                <td>Active, Blocked, Investigating, Reviewed</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>priority</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>Case优先级</td>
+                                <td>1,2,3,4</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>action_note</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>注释</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>related_bug</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>相关Bug</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>related_case</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>相关Case</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>mail_to</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>抄送给, 以','分割</td>
+                                <td>系统管理员,admin@bugfree.org</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>attachment_file[]</td>
+                                <td>Beta</td>
+                                <td></td>
+                                <td>附件，必须通过POST方法传递</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>从BugFree 2.x升级到BugFree 3.0的自定义字段参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>CaseType</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>Case类型</td>
+                                <td>功能,配置相关,安装部署,安全相关,性能压力,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CaseMethod</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>测试方法</td>
+                                <td>手动执行,自动化脚本</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ScriptedBy</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>脚本编写者</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ScriptedDate</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>格式: yyyy-mm-dd</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ScriptStatus</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>脚本状态</td>
+                                <td>未计划,计划,被阻止,正在编写,已完成,已评审</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ScriptLocation</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>脚本地址</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CasePlan</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>测试计划</td>
+                                <td>功能测试,单元测试,版本验证测试,集成测试,系统测试,冒烟测试,验收测试</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CaseKeyword</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>关键字</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>DisplayOrder</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>显示顺序</td>
+                                <td>0</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=addcase&amp;format=json&amp;PHPSESSID=72iltnrjsjph6nm8rmsru4nbd2&amp;product_id=24&amp;prodcutmodule_id=9795&amp;title=欢迎使用BugFree&amp;case_step=test&amp;assign_to_name=系统管理员&amp;case_status=Active&amp;CaseType=功能&amp;priority=1&amp;CaseMethod=手动测试&amp;ReplyNote=test&amp;ScriptedBy=admin&amp;ScriptedDate=2012-10-10&amp;ScriptStatus=未计划&amp;ScriptLocation=test&amp;CasePlan=功能测试&amp;CaseKeyword=test&amp;related_bug=1&amp;related_case=1
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","CaseID":"82759"}</div>
+                    </div>
+                </div>
+                <!-- end addcase div -->
+                <hr/>
+                <!-- addresult div -->
+                <div>
+                    <h2><a select="addresult">addresult</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">新增Result。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>addresult</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>no_bbcode_transfer</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>是否不需要BBCode转换,默认要转换</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>related_case_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>CaseID</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>result_value</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>Result结果</td>
+                                <td>Passed, Failed</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>result_status</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>运行状态</td>
+                                <td>Completed, Investigating, Resolved</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>assign_to_name</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>指派给</td>
+                                <td>系统管理员</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>action_note</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>注释</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>attachment_file[]</td>
+                                <td>Beta</td>
+                                <td></td>
+                                <td>附件，必须通过POST方法传递</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>从BugFree 2.x升级到BugFree 3.0的自定义字段参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>OpenedBuild</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>创建build</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugOS</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>操作系统</td>
+                                <td>全部,Windows 7,Windows Vista,Windows XP,Windows 2000,Linux,FreeBSD,Unix,Mac OS,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugBrowser</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>浏览器</td>
+                                <td>全部,IE 8.0,IE 7.0,IE 6.0,FireFox 4.0,FireFox 3.0,FireFox 2.0,Chrome,Safari,Opera,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugMachine</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>机器配置</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ResultKeyword</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>关键字</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=addresult&amp;related_case_id=1&amp;result_value=passed&amp;result_status=Completed&amp;assign_to=系统管理员&amp;action_note=test&amp;OpenedBuild=N/A&amp;PHPSESSID=ggq773lqr7f2nmia6qmst10rm0
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","ResultID":"36677"}</div>
+                    </div>
+                </div>
+                <!-- end addresult div -->
+                <hr/>
+                <!-- updatebug div -->
+                <div>
+                    <h2><a select="updatebug">updatebug</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">修改Bug。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>addbug</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>BugID</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>product_id</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>产品id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>productmodule_id</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>模块id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>no_bbcode_transfer</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>是否不需要BBCode转换,默认要转换</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>title</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>Bug标题</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>                            
+                            <tr>
+                                <td>severity</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>严重程度</td>
+                                <td>1,2,3,4</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>priority</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>优先级</td>
+                                <td>1,2,3,4</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>repeat_step</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>重现步骤</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>assign_to_name</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>指派给</td>
+                                <td>系统管理员</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>action_note</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>注释</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>mail_to</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>抄送给, 以','分割</td>
+                                <td>系统管理员,admin@bugfree.org</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>related_case</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>相关Case</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>bug_status</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>Bug状态</td>
+                                <td>Active, Resolved, Closed</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>attachment_file[]</td>
+                                <td>Beta</td>
+                                <td></td>
+                                <td>附件，必须通过POST方法传递</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>从BugFree 2.x升级到BugFree 3.0的自定义字段参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>BugType</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>Bug类型</td>
+                                <td>代码错误,用户界面,需求变动,新增需求,需求文档,设计文档,配置相关,安装部署,安全相关,性能压力,标准规范,测试脚本,事务跟踪,Bad Case,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>HowFound</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>如何发现</td>
+                                <td>代码错误,用户界面,需求变动,新增需求,需求文档,设计文档,配置相关,安装部署,安全相关,性能压力,标准规范,测试脚本,事务跟踪,Bad Case,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>OpenedBuild</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>创建build</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugOS</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>操作系统</td>
+                                <td>全部,Windows 7,Windows Vista,Windows XP,Windows 2000,Linux,FreeBSD,Unix,Mac OS,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugBrowser</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>浏览器</td>
+                                <td>全部,IE 8.0,IE 7.0,IE 6.0,FireFox 4.0,FireFox 3.0,FireFox 2.0,Chrome,Safari,Opera,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugMachine</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>机器配置</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugKeyword</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>关键字</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=updatebug&amp;product_id=154&amp;productmodule_id=830&amp;id=129591&amp;title=test&amp;assign_to_name=系统管理员&amp;severity=1&amp;BugType=%B4%FA%C2%EB%B4%ED%CE%F3&amp;HowFound=%B9%A6%C4%DC%B2%E2%CA%D4&amp;OpenedBuild=test&amp;BugKeyword=test&amp;priority=1&amp;mail_to=系统管理员&amp;PHPSESSID=b87e1bb2806efda076fa8f3fc4a9f43d
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","BugID":"129591"}</div>
+                    </div>
+                </div>
+                <!-- end updatebug div -->
+                <hr/>
+                <!-- updatecase div -->
+                <div>
+                    <h2><a select="updatecase">updatecase</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">修改Case。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>addcase</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>CaseID</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>product_id</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>产品id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>productmodule_id</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>模块id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>no_bbcode_transfer</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>是否不需要BBCode转换,默认要转换</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>title</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>Case标题</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>case_step</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>Case步骤</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>assign_to_name</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>指派给</td>
+                                <td>系统管理员</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>case_status</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>Case状态</td>
+                                <td>Active, Blocked, Investigating, Reviewed</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>priority</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>Case优先级</td>
+                                <td>1,2,3,4</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>action_note</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>注释</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>related_bug</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>相关Bug</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>related_case</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>相关Case</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>mail_to</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>抄送给, 以','分割</td>
+                                <td>系统管理员,admin@bugfree.org</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>attachment_file[]</td>
+                                <td>Beta</td>
+                                <td></td>
+                                <td>附件，必须通过POST方法传递</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>从BugFree 2.x升级到BugFree 3.0的自定义字段参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>CaseType</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>Case类型</td>
+                                <td>功能,配置相关,安装部署,安全相关,性能压力,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CaseMethod</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>测试方法</td>
+                                <td>手动执行,自动化脚本</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ScriptedBy</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>脚本编写者</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ScriptedDate</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>格式: yyyy-mm-dd</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ScriptStatus</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>脚本状态</td>
+                                <td>未计划,计划,被阻止,正在编写,已完成,已评审</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ScriptLocation</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>脚本地址</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CasePlan</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>测试计划</td>
+                                <td>功能测试,单元测试,版本验证测试,集成测试,系统测试,冒烟测试,验收测试</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>CaseKeyword</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>关键字</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>DisplayOrder</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>显示顺序</td>
+                                <td>0</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=updatecase&amp;format=json&amp;PHPSESSID=72iltnrjsjph6nm8rmsru4nbd2&amp;id=82759&amp;product_id=24&amp;productmodule_id=9795
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","CaseID":"82759"}</div>
+                    </div>
+                </div>
+                <!-- end updatecase div -->
+                <hr/>
+                <!-- updateresult div -->
+                <div>
+                    <h2><a select="updateresult">updateresult</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">修改Result。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>addresult</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>ResultID</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>no_bbcode_transfer</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>是否不需要BBCode转换,默认要转换</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>related_case_id</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>CaseID</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>result_value</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>Result结果</td>
+                                <td>Passed, Failed</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>result_status</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>运行状态</td>
+                                <td>Completed, Investigating, Resolved</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>assign_to_name</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>指派给</td>
+                                <td>系统管理员,admin@bugfree.org</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>action_note</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>注释</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>attachment_file[]</td>
+                                <td>Beta</td>
+                                <td></td>
+                                <td>附件，必须通过POST方法传递</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>从BugFree 2.x升级到BugFree 3.0的自定义字段参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>OpenedBuild</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>创建build</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugOS</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>操作系统</td>
+                                <td>全部,Windows 7,Windows Vista,Windows XP,Windows 2000,Linux,FreeBSD,Unix,Mac OS,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugBrowser</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>浏览器</td>
+                                <td>全部,IE 8.0,IE 7.0,IE 6.0,FireFox 4.0,FireFox 3.0,FireFox 2.0,Chrome,Safari,Opera,其他</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>BugMachine</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>机器配置</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>ResultKeyword</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>关键字</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=addresult&amp;id=36677&amp;result_value=passed
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","ResultID":"36677"}</div>
+                    </div>
+                </div>
+                <!-- end uddateresult div -->
+                <hr/>
+                <!-- getquery div -->
+                <div>
+                    <h2><a select="getquery">getquery</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">根据query查找信息。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>QueryID</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>QueryID</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>page</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>页数</td>
+                                <td>1</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>size</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>页大小</td>
+                                <td>100</td>
+                                <td>100</td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=getquery&amp;PHPSESSID=72iltnrjsjph6nm8rmsru4nbd2&amp;QueryID=1&amp;page=1&amp;size=20
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","BugList":{"129592":{"id":"129592","title":"\u6b22\u8fce\u4f7f\u7528BugFree","module_path":"Sample\/Sample Module","bug_status":"Active","assign_to_name":"Active","mail_to":"","updated_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","updated_at":"2011-11-17 05:35:15","created_at":"\u7cfb\u7edf\u7ba1\u7406\u5458","created_at":"2011-11-17 05:35:15","resolved_by_name":null,"resolved_at":null,"duplicate_id":null,"closed_by_name":null,"closed_at":null,"related_bug":"","related_case":"","resulted_bug":"","modified_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","reopen_count":"0","solution":null,"test":"yes","mulitselect":"1,2,3,4","OpenedBuild":"N\/A","BugSubStatus":null,"BugMachine":null,"BugKeyword":null,"ResolvedBuild":null,"severity":"4","priority":"4","BugType":"\u5176\u4ed6","HowFound":"\u5176\u4ed6","BugOS":null,"BugBrowser":null}},"BugIDs":"129592","page":1,"size":100,"type":"bug"}</div>
+                    </div>
+                </div>
+                <!-- end getquery div -->
+                <hr/>
+                <!-- query div -->
+                <div>
+                    <h2><a select="query">query</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">查找信息。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>query</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>query</td>
+                                <td>XML</td>
+                                <td>必须</td>
+                                <td>将根据传输的XML转义成SQL查询，XML Schema见下文。该参数只支持POST方法传输。</td>
+                                <td>XML参数示例见下文</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>product_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>ProductID。在BugFree 2.x里定义为ProjectID。查询将会基于product_id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #仅支持Post
+                            </span>
+                            <br/>
+                            setPostAction('http://bugfree/api.php');<br/>
+                            setPostField('mode', 'query');<br/>
+                            setPostField('PHPSESSID', '72iltnrjsjph6nm8rmsru4nbd2');<br/>
+                            setPostField('query', $xml);
+                        </div>
+                        <h3>XML参数示例</h3>
+                        <div class="source" style="font-family: '[object HTMLOptionElement]', Consolas, 'Lucida Console', 'Courier New'; color: rgb(0, 0, 0); background-color: rgb(249, 247, 237); "> <span style="color: rgb(153, 153, 153); font-weight: bold; ">&lt;?xml version=&quot;1.0&quot; encoding="UTF-8"?&gt;</span><br> <span style="color: rgb(0, 0, 128); ">&lt;query</span> <span style="color: rgb(0, 128, 128); ">table=</span><span style="color: rgb(187, 136, 68); ">&quot;Bug&quot;</span> <span style="color: rgb(0, 128, 128); ">xmlns:xsi=</span><span style="color: rgb(187, 136, 68); ">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span style="color: rgb(0, 128, 128); ">xsi:noNamespaceSchemaLocation=</span><span style="color: rgb(187, 136, 68); ">&quot;http://bugfree/query.xsd&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp; <span style="color: rgb(0, 0, 128); ">&lt;fields</span> <span style="color: rgb(0, 128, 128); ">logic=</span><span style="color: rgb(187, 136, 68); ">&quot;OR&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;field</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;1&quot;</span> <span style="color: rgb(0, 128, 128); ">operator=</span><span style="color: rgb(187, 136, 68); ">&quot;EQ&quot;</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;1&quot;</span><span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/fields&gt;</span><br> <span style="color: rgb(0, 0, 128); ">&lt;/query&gt;</span><br></div>
+                        <h3>XML Schema</h3>
+                        <div class="source" style="font-family: '[object HTMLOptionElement]', Consolas, 'Lucida Console', 'Courier New'; color: rgb(0, 0, 0); background-color: rgb(249, 247, 237); "> <span style="color: rgb(153, 153, 153); font-weight: bold; ">&lt;?xml version=&quot;1.0&quot; encoding="UTF-8"?&gt;</span><br> <span style="color: rgb(0, 0, 128); ">&lt;xs:schema</span> <span style="color: rgb(0, 128, 128); ">xmlns:xs=</span><span style="color: rgb(187, 136, 68); ">&quot;http://www.w3.org/2001/XMLSchema&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:element</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;query&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:complexType&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:choice&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:element</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;fields&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;fields&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:element</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;field&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;field&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:choice&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;table&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;table&quot;</span> <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;required&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;select&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;select&quot;</span> <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;optional&quot;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 128, 128); ">default=</span><span style="color: rgb(187, 136, 68); ">&quot;*&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;order&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:string&quot;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;optional&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;asc&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:boolean&quot;</span> <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;optional&quot;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 128, 128); ">default=</span><span style="color: rgb(187, 136, 68); ">&quot;false&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;page&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:integer&quot;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;optional&quot;</span> <span style="color: rgb(0, 128, 128); ">default=</span><span style="color: rgb(187, 136, 68); ">&quot;1&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;size&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:integer&quot;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;optional&quot;</span> <span style="color: rgb(0, 128, 128); ">default=</span><span style="color: rgb(187, 136, 68); ">&quot;20&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:complexType&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:element&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:complexType</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;fields&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:sequence&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:element</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;fields&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;fields&quot;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 128, 128); ">minOccurs=</span><span style="color: rgb(187, 136, 68); ">&quot;0&quot;</span> <span style="color: rgb(0, 128, 128); ">maxOccurs=</span><span style="color: rgb(187, 136, 68); ">&quot;unbounded&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:element</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;field&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;field&quot;</span> <span style="color: rgb(0, 128, 128); ">minOccurs=</span><span style="color: rgb(187, 136, 68); ">&quot;1&quot;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 128, 128); ">maxOccurs=</span><span style="color: rgb(187, 136, 68); ">&quot;unbounded&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:sequence&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;logic&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;logic&quot;</span> <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;required&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:complexType&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:complexType</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;field&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;name&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:string&quot;</span> <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;required&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;operator&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;operator&quot;</span> <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;required&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:attribute</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;value&quot;</span> <span style="color: rgb(0, 128, 128); ">type=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:string&quot;</span> <span style="color: rgb(0, 128, 128); ">use=</span><span style="color: rgb(187, 136, 68); ">&quot;required&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:complexType&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:simpleType</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;table&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:restriction</span> <span style="color: rgb(0, 128, 128); ">base=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:string&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;Bug&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;Case&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;Result&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:restriction&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:simpleType&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:simpleType</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;select&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:restriction</span> <span style="color: rgb(0, 128, 128); ">base=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:string&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;*&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;count(*)&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:restriction&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:simpleType&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:simpleType</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;logic&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:restriction</span> <span style="color: rgb(0, 128, 128); ">base=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:string&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;OR&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;AND&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:restriction&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:simpleType&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:simpleType</span> <span style="color: rgb(0, 128, 128); ">name=</span><span style="color: rgb(187, 136, 68); ">&quot;operator&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:restriction</span> <span style="color: rgb(0, 128, 128); ">base=</span><span style="color: rgb(187, 136, 68); ">&quot;xs:string&quot;</span><span style="color: rgb(0, 0, 128); ">&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;BETWEEN&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;GT&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;LT&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;GE&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;LE&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;EQ&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;NEQ&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;LIKE&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;NOTLIKE&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;IN&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;xs:enumeration</span> <span style="color: rgb(0, 128, 128); ">value=</span><span style="color: rgb(187, 136, 68); ">&quot;NOTIN&quot;</span> <span style="color: rgb(0, 0, 128); ">/&gt;</span><br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:restriction&gt;</span><br> &nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 0, 128); ">&lt;/xs:simpleType&gt;</span><br> <span style="color: rgb(0, 0, 128); ">&lt;/xs:schema&gt;</span><br></div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","QueryList":{"129592":{"id":"129592","title":"\u6b22\u8fce\u4f7f\u7528BugFree","module_path":"Sample\/Sample Module","bug_status":"Active","assign_to_name":"Active","mail_to":"","updated_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","updated_at":"2011-11-17 05:35:15","created_at":"\u7cfb\u7edf\u7ba1\u7406\u5458","created_at":"2011-11-17 05:35:15","resolved_by_name":null,"resolved_at":null,"duplicate_id":null,"closed_by_name":null,"closed_at":null,"related_bug":"","related_case":"","resulted_bug":"","modified_by_name":"\u7cfb\u7edf\u7ba1\u7406\u5458","reopen_count":"0","solution":null,"test":"yes","mulitselect":"1,2,3,4","OpenedBuild":"N\/A","BugSubStatus":null,"BugMachine":null,"BugKeyword":null,"ResolvedBuild":null,"severity":"4","priority":"4","BugType":"\u5176\u4ed6","HowFound":"\u5176\u4ed6","BugOS":null,"BugBrowser":null}},"page":1,"size":100}</div>
+                    </div>
+                </div>
+                <!-- end query div -->
+                <hr />
+                <!-- findproducts div -->
+                <div>
+                    <h2><a select="findproducts">findproducts</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">查找products。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>product id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>name</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>product name</td>
+                                <td>Sample</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>size</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>页大小</td>
+                                <td>100</td>
+                                <td>100</td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=findproducts&amp;id=24&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","ProductList":[{"id":"24","name":"Sample"}]}</div>
+                    </div>
+                </div>
+                <!-- end findproducts div -->
+                <hr/>
+                <!-- findmodules div -->
+                <div>
+                    <h2><a select="findmodules">findmodules</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">查找modules。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td>Integer</td>
+                                <td></td>
+                                <td>module id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>name</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>module name</td>
+                                <td>Sample</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>product_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>product id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api.php?mode=findmodules&amp;product_id=24&&amp;id=9795&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","ModuleList":[{"id":"9795","name":"Sample Module","product_id":"24","grade":"1","parent_id":null,"full_path_name":"Sample Module"}]}</div>
+                    </div>
+                </div>
+                <!-- end findmodules div -->
+                <hr/>
+                <!-- finduser div -->
+                <div>
+                    <h2><a select="finduser">finduser</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">查找user。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>realname</td>
+                                <td>String</td>
+                                <td></td>
+                                <td>user realname</td>
+                                <td>Sample</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=finduser&amp;realname=sample&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","userinfo":{"id":"4572","username":"aaa","realname":"aaa","email":"aa@test.com","wangwang":"","email_flag":"1","wangwang_flag":"0","created_at":"2011-02-21 14:51:52","created_by":"3558","updated_at":"2011-12-07 13:32:48","updated_by":"0","is_dropped":"0","authmode":"ldap","lock_version":"247"}} </div>
+                    </div>
+                </div>
+                <!-- end finduser div -->
+                <hr/>
+                <!-- getBugStatusChangeCount div -->
+                <div>
+                    <h2><a select="getBugStatusChangeCount">getBugStatusChangeCount</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">获取指定模块和时间段内Bug状态改变总次数。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>module_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>module id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>begin_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>起始日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>end_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>结束日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=getBugStatusChangeCount&amp;module_id=1&amp;begin_date=2011-11-11&amp;end_date=2011-11-11&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","status_change_count":"48"}</div>
+                    </div>
+                </div>
+                <!-- end getBugStatusChangeCount div -->
+                <hr/>
+                <!-- getReopenCount div -->
+                <div>
+                    <h2><a select="getReopenCount">getReopenCount</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">指定模块和时间段内Bug激活总次数。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>module_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>module id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>begin_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>起始日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>end_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>结束日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=getReopenCount&amp;module_id=1&amp;begin_date=2011-11-11&amp;end_date=2011-11-11&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","reopen_count":"3"}</div>
+                    </div>
+                </div>
+                <!-- end getReopenCount div -->
+                <hr/>
+                <!-- getReopenBugDetail div -->
+                <div>
+                    <h2><a select="getReopenBugDetail">getReopenBugDetail</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">获取指定模块和时间段内Bug激活次数大于2的bug id和激活次数。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>module_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>module id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>begin_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>起始日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>end_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>结束日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=getReopenBugDetail&amp;module_id=1&amp;begin_date=2011-11-11&amp;end_date=2011-11-11&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","result_info":[{"bug_id":"142431","reopen_count":"5"},{"bug_id":"143400","reopen_count":"3"}]}</div>
+                    </div>
+                </div>
+                <!-- end getReopenBugDetail div -->
+                <hr/>
+                <!-- getCloseBugDetail div -->
+                <div>
+                    <h2><a select="getCloseBugDetail">getCloseBugDetail</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">获取指定模块和时间段内被关闭bug的id和bug创建时间。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>module_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>module id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>begin_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>起始日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>end_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>结束日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=getCloseBugDetail&amp;module_id=1&amp;begin_date=2011-11-11&amp;end_date=2011-11-11&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","result_info":[{"id":"128837","created_at":"2011-11-11 17:00:00"},{"id":"140458","created_at":"2011-12-31 11:18:22"}]}</div>
+                    </div>
+                </div>
+                <!-- end getCloseBugDetail div -->
+                <hr/>
+                <!-- getBugStatusDetail div -->
+                <div>
+                    <h2><a select="getBugStatusDetail">getBugStatusDetail</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">获取指定模块和时间段内被关闭bug,在器整个生命周期中，按时间顺序发生的所有状态迁移内容及其时间</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>module_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>module id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>begin_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>起始日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>end_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>结束日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=getBugStatusDetail&amp;module_id=1&amp;begin_date=2011-11-11&amp;end_date=2011-11-11&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","result_info":[{"buginfo_id":"128837","old_value":"Active","new_value":"Resolved","created_at":"2011-12-30 12:38:05"},{"buginfo_id":"128837","old_value":"Resolved","new_value":"Closed","created_at":"2012-01-12 11:37:57"}]}</div>
+                    </div>
+                </div>
+                <!-- end getCloseBugDetail div -->
+                <hr/>
+                <!-- getBugCountByReopenNum div -->
+                <div>
+                    <h2><a select="getBugCountByReopenNum">getBugCountByReopenNum</a></h2>
+                    <div>
+                        <h3>简单描述</h3>
+                        <p class="para">获取指定模块和时间段内激活次数等于指定次数的bug数量。</p>
+                        <h3>系统级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>mode</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>API接口名称</td>
+                                <td>getquery</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>$sesseionname</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>以getsid取得的sessionname为键名，sessionid为键值</td>
+                                <td>$sessionid</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>应用级输入参数</h3>
+                        <table>
+                            <tr>
+                                <th width="15%">名称</th>
+                                <th width="15%">类型</th>
+                                <th width="15%">是否必须</th>
+                                <th width="25%">描述</th>
+                                <th width="15%">示例值</th>
+                                <th width="15%">默认值</th>
+                            </tr>
+                            <tr>
+                                <td>module_id</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>module id</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>begin_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>起始日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>end_date</td>
+                                <td>String</td>
+                                <td>必须</td>
+                                <td>结束日期</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>reopen_num</td>
+                                <td>Integer</td>
+                                <td>必须</td>
+                                <td>reopen次数(1,2或是大于2的任意数字)</td>
+                                <td>2011-11-11</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <h3>代码示例</h3>
+                        <div class="code">
+                            <span class="comment">
+                                #支持Post
+                            </span>
+                            <br/>
+                            http://bugfree/api3.php?mode=getBugCountByReopenNum&amp;reopen_num=2&amp;module_id=1&amp;begin_date=2011-11-11&amp;end_date=2011-11-11&amp;PHPSESSID=9seofg47sti52fn3jop2gfofi3
+                        </div>
+                        <h3>返回示例</h3>
+                        <p>JSON数据格式:</p>
+                        <div class="code">{"status":"success","code":0,"info":"\u64cd\u4f5c\u6210\u529f","bug_count":"3"}</div>
+                    </div>
+                </div>
+                <!-- end getCloseBugDetail div -->
+                <hr/>
+            </div>
+        </div>
+        <script  type="text/javascript">
+            $(document).ready(function(){
+                var pos = location.href.lastIndexOf('#');
+                if(pos > 0)
+                {
+                    var index = location.href.substr(pos + 1);
+                    setCurrentReport(index);
+                }
+                $("#nav a").click(function(){
+                    var index = $(this).attr('href').substr(1);
+                    setCurrentReport(index);
+                });
+            });
+            var setCurrentReport = function(index) {
+                var current = $("a[select=" + index + "]");
+                $(current).show();
+                if(null != $(current).position()) {
+                    $(window).scrollTop(($(current).position().top));
+                    $("#nav a").removeClass('selected');
+                    $("#nav a[href='#" + index + "']").addClass('selected');
+                }
+            }
+        </script>
+    </body>
+</html>
