@@ -1,0 +1,61 @@
+#edit-top-bar
+{
+    background-color: rgb(77,155,27);
+}
+
+#logincontainer
+{
+    border-color: green;
+    background-color:rgb(238,248,232);
+}
+
+#loginlogo {
+    background: url("../images/green/seperate_line.png") no-repeat scroll right center transparent;
+}
+
+#version {
+    background: url("../images/green/logo_login.png") no-repeat scroll left bottom transparent;
+    color: #41697E;
+}
+
+#loginform-container .TxtInput {
+    border-color: #BCBCBC;
+    color: #41697E;
+}
+
+.loginbutton
+{
+    background-color:rgb(136,198,95);
+}
+
+#top {
+    background-color: rgb(77,155,27);
+}
+
+.menu li a
+{
+    color: white;
+    background-color: rgb(127,206,77);
+}
+
+#leftindex
+{
+    background-color: rgb(226,255,226);
+}
+
+.leftmenu .title
+{
+    background-color: rgb(148,205,112);
+    color:#fff;
+}
+
+.leftmenu a
+{
+    color:#000000;
+}
+
+div.querydiv
+{
+    border-color: #94CD70;
+    background-color: rgb(230,255,231);
+}

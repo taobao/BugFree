@@ -1,0 +1,119 @@
+#searchresult-grid div#SearchResultDiv
+{
+    padding-top: 1px;
+    background-color: #F0F0F0;
+}
+
+/* ------主区域列表表格样式开始------ */
+#searchresult-grid
+{
+    /*    height: 100%;*/
+    margin-bottom: 0px;
+    background-color: #F0F0F0;
+}
+#searchresult-grid table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #F0F0F0;
+    text-align: center;
+}
+#searchresult-grid table th {
+    background-color: #F0F0F0;
+    border-bottom: 1px solid #C1C8D2;
+    font-weight: bold;
+    padding: 1px 5px;
+    white-space: nowrap;
+}
+#searchresult-grid table th a {
+    color: #000000;
+    display: block;
+}
+
+#searchresult-grid table th a.asc {
+    background: url("../images/up.gif") no-repeat right center transparent;
+    padding-right: 10px;
+}
+
+#searchresult-grid table th a.desc {
+    background: url("../images/down.gif") right center no-repeat transparent;
+    padding-right: 10px;
+}
+
+#searchresult-grid table td {
+    padding: 5px 5px;
+    border-bottom: 1px solid #D6D6D6;
+    white-space: nowrap;
+}
+
+#searchresult-grid table td.filtered a
+{
+    font-weight: bold !important;
+    color: #48ABF8 !important;
+}
+
+#searchresult-grid table td a {
+    text-decoration: none;
+}
+
+#searchresult-grid table tr.bugstatus_active a,#searchresult-grid table tr.bugstatus_resolved a {
+    color: #000000;
+}
+
+#searchresult-grid table tr.bugstatus_closed a {
+    color: #878787;
+}
+#searchresult-grid table td a.with_underline
+{
+    color:#06c;
+    text-decoration:underline;
+}
+
+#searchresult-grid table tr.disabled
+{
+    color: #878787;
+}
+#searchresult-grid table td.draft {
+    color: #CC0000;
+}
+#searchresult-grid table tbody tr:hover {
+    background: #F3F3F3;
+    cursor: default;
+}
+#searchresult-grid table tbody tr.normal:hover {
+    background: #F3F3F3;
+    cursor: default;
+}
+#searchresult-grid table tbody td.title:hover {
+    cursor: pointer;
+}
+/* ------主区域列表表格样式结束------ */
+
+
+/* ------主区域列表分页样式开始------ */
+div.pager {
+    text-align: right;
+    padding: 3px 10px;
+    border-bottom: 1px solid #CAD4E6;
+}
+div.pager ul,
+div.pager ul li {
+    display: inline;
+}
+div.pager select {
+    margin: 0px 10px;
+    display: inline;
+}
+div.pager a {
+    color: #0065CC;
+    text-decoration: none;
+}
+
+div.pager a:hover
+{
+    text-decoration: underline;
+}
+div.pager li.hidden a {
+    text-decoration: none;
+    color: #000000;
+    cursor: default;
+}
