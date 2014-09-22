@@ -360,6 +360,7 @@ class SearchController extends Controller
     {
         $productId = $_REQUEST['product_id'];
         $infoType = $_REQUEST['type'];
+        $productModuleId = $_REQUEST['productmodule_id'];
         $error = "";
         $msg = "";
         $fileElementName = 'casefilename';
@@ -379,7 +380,7 @@ class SearchController extends Controller
         }
 
         $importService = new ImportService();
-        $msg = $importService->import($fileName, $productId, $infoType);
+        $msg = $importService->import($fileName, $productId, $infoType,$productModuleId);
         echo json_encode(array('error' => '', 'msg' => $msg));
         @unlink($_FILES[$fileElementName]);
     }

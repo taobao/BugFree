@@ -346,7 +346,7 @@
                             'defaultShowFieldOptionStr' => $defaultShowFieldOptionStr));
                 if((Info::TYPE_CASE == $infoType) || (Info::TYPE_BUG == $infoType))
                 {
-                    echo $this->renderPartial('_import_info', array('productId' => $productId, 'infoType'=>$infoType));
+                    echo $this->renderPartial('_import_info', array('productId' => $productId, 'infoType'=>$infoType, 'productModuleId' => $productModuleId));
                 }
 
                 if($showType == Info::SHOW_TYPE_GRID)
