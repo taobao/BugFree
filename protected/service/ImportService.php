@@ -85,7 +85,7 @@ class ImportService
             }
             else
             {
-                $basicInfo['productmodule_id'] = 0;
+                //$basicInfo['productmodule_id'] = 0;
             }
         }
         // hard code for id
@@ -208,7 +208,7 @@ class ImportService
      * @param mixed $sheet file or string
      * @param string $infoType
      */
-    public function import($sheet, $productId, $infoType)
+    public function import($sheet, $productId, $infoType,$productModuleId)
     {
         $sheetConv = new SheetConv();
         $data = $sheetConv->xml2array($sheet);
@@ -222,7 +222,7 @@ class ImportService
             foreach($items as $iidx => $item)
             {
                 // hard code for product_id
-                $basicInfo = array('product_id' => $productId);
+                $basicInfo = array('product_id' => $productId, 'productmodule_id' => $productModuleId);
                 $customInfo = array();
                 $isEmpty = true;
                 foreach($item as $key => $val)

@@ -2,6 +2,7 @@
 <script type="text/javascript">
     var $productId = <?php echo $productId; ?>;
     var $infoType = '<?php echo $infoType; ?>';
+    var $productModuleId = <?php echo $productModuleId; ?>;
     function ajaxFileUpload(){
         $('#uploadbutton').attr('disabled','disable');
         $("#loading").show();
@@ -11,7 +12,7 @@
             secureuri:false,
             fileElementId:'casefilename',
             dataType: 'json',
-            data:{product_id:$productId,type:$infoType},
+            data:{product_id:$productId,type:$infoType,productmodule_id:$productModuleId},
             success: function (data, status)
             {
                 $('#uploadbutton').removeAttr('disabled');
