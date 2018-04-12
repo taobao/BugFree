@@ -221,7 +221,7 @@ class TestUserService
 
     public static function getUserGroupNameArr($userId)
     {
-        $groupNameArr = '';
+        $groupNameArr = array();
         $groupIds = MapUserGroup::model()->findAllByAttributes(array('test_user_id' => $userId));
         for($i = 0; $i < count($groupIds); $i++)
         {
